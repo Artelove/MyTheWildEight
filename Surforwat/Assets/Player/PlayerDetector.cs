@@ -39,8 +39,7 @@ public class PlayerDetector : Detector
                     }
                 }
             }
-
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -79,7 +78,6 @@ public class PlayerDetector : Detector
 
     private DetectableObject GetDetectableObjectByMouseRaycast()
     {
-        DetectableObject nearestObject = null;
         RaycastHit[] raycastHits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
         List<RaycastHit> rays = new List<RaycastHit>();
         List<DetectableObject> rayDetectableObjects = new List<DetectableObject>();
