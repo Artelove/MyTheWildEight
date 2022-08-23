@@ -8,11 +8,12 @@ namespace Detect
     [RequireComponent(typeof(Rigidbody))]
     public class Detector : MonoBehaviour, IDetector
     {
-        public GameObject debagShpere;
         public event ObjectDetectedHandler OnDetected;
         public event ObjectDetectedHandler OnReleased;
     
         private List<DetectableObject> _detectedObjects = new List<DetectableObject>();
+
+        public List<DetectableObject> DetectableObjects => _detectedObjects;
     
         public void Detect(IDetectableObject detectableObject)
         {
@@ -69,45 +70,6 @@ namespace Detect
             }
         }
 
-        private void FixedUpdate()
-        {
-           
-           if(_detectedObjects.Count != 0)
-               OutlineNearestToMouseDetectableObject();
-            
-        }
-        
-        private void OutlineNearestToMouseDetectableObject()
-        {
-            float min = float.MaxValue;
-            DetectableObject nearestObject = null;
-            Plane PlaneForPick = new Plane(Vector3.up, Vector3.zero);
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float rayDistance;
-            Vector3 pickVector = new Vector3();
-            if (PlaneForPick.Raycast(ray, out rayDistance))
-            {
-                pickVector = ray.GetPoint(rayDistance);
-            }
-            foreach (var detectedObject in _detectedObjects)
-            {
-                float distanse = 0;
-                    distanse = Vector3.Distance(pickVector, detectedObject.gameObject.transform.position);
-                        debagShpere.transform.position = pickVector;
-                    if (distanse < min)
-                    {
-                        min = distanse;
-                        if (nearestObject != null)
-                            if (nearestObject.IsDetected)
-                                nearestObject.DetectionReleased(gameObject);
-                        nearestObject = detectedObject;
-                    }
-                    else
-                        detectedObject.DetectionReleased(gameObject);
-            }
-            nearestObject.Detected(gameObject);
-        }
         private bool IsColliderDetectableObject(Collider collider, out IDetectableObject detectedObject)
         {
             detectedObject = collider.GetComponentInParent<IDetectableObject>();
