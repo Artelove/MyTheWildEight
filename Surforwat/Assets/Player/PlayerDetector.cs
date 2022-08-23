@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Detect;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class PlayerDetector : Detector
             if (DetectableObjects.Count != 0)
             {
                 DetectableObject nearestObject = GetDetectableObjectByMouseRaycast();
-                if(nearestObject != null)
+                if (nearestObject != null)
                     Debug.Log("RAYCAST");
                 if (nearestObject == null)
                 {
@@ -39,7 +40,7 @@ public class PlayerDetector : Detector
                 }
             }
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -52,7 +53,7 @@ public class PlayerDetector : Detector
         {
             var distance = Vector3.Distance(mousePoint,
                 detectedObject.gameObject.transform.position);
-            
+
             if (distance < min)
             {
                 min = distance;
@@ -80,14 +81,34 @@ public class PlayerDetector : Detector
     {
         DetectableObject nearestObject = null;
         RaycastHit[] raycastHits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
-        for (int i = 0; i < raycastHits.Length; i++)
+        List<RaycastHit> rays = new List<RaycastHit>();
+        List<DetectableObject> rayDetectableObjects = new List<DetectableObject>();
+        for (int i = raycastHits.Length - 1; i >= 0; i--)
         {
-            if (raycastHits[i].collider.gameObject.TryGetComponent<DetectableObject>(out DetectableObject detectableObject))
+            if (raycastHits[i].collider.gameObject
+                .TryGetComponent<DetectableObject>(out DetectableObject detectableObject))
             {
-                nearestObject = detectableObject;
-                break;
+                rays.Add(raycastHits[i]);
+                rayDetectableObjects.Add(detectableObject);
             }
         }
-        return nearestObject;
+        
+        if (rays.Count != 0)
+        {
+            int index = 0;
+            float minDistanse = float.MaxValue;
+            
+            for (int i = 0; i < rays.Count; i++)
+            {
+                if (minDistanse > rays[i].distance)
+                {
+                    minDistanse = rays[i].distance;
+                    index = i;
+                }
+            }
+
+            return rayDetectableObjects[index];
+        }
+        return null;
     }
 }
