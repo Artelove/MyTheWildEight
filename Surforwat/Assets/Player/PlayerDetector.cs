@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class PlayerDetector : Detector
 {
-    [SerializeField] private GameObject debugPointer;
 
     private void Start()
     {
@@ -21,13 +20,8 @@ public class PlayerDetector : Detector
             if (DetectableObjects.Count != 0)
             {
                 DetectableObject nearestObject = GetDetectableObjectByMouseRaycast();
-                if (nearestObject != null)
-                    Debug.Log("RAYCAST");
-                if (nearestObject == null)
-                {
-                    Debug.Log("NEAREST");
+                if (nearestObject == null) 
                     nearestObject = GetDetectableObjectByNearestToMouse();
-                }
 
                 foreach (var detectableObject in DetectableObjects)
                 {
@@ -84,7 +78,7 @@ public class PlayerDetector : Detector
         for (int i = raycastHits.Length - 1; i >= 0; i--)
         {
             if (raycastHits[i].collider.gameObject
-                .TryGetComponent<DetectableObject>(out DetectableObject detectableObject))
+                .TryGetComponent(out DetectableObject detectableObject))
             {
                 rays.Add(raycastHits[i]);
                 rayDetectableObjects.Add(detectableObject);

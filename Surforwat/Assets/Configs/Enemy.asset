@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp-firstpass::Outline/OutlineConfig
   _outlineColor: {r: 1, g: 0, b: 0, a: 1}
   _outlineMode: 0
-  _outlineWidth: 2
+  _outlineWidth: 3

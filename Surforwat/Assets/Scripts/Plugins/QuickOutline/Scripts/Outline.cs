@@ -15,7 +15,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class Outline : MonoBehaviour
 {
- 
+  private bool _configNeedLoad = false;
   [SerializeField] private OutlineConfig _outlineConfig;
   private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
   public enum Mode {
@@ -82,15 +82,26 @@ public class Outline : MonoBehaviour
 
   private bool needsUpdate;
 
-  private void Init()
+  private void InitConfig()
   {
-      outlineColor = _outlineConfig.OutlineColor;
-      outlineMode = _outlineConfig.OutlineMode;
-      outlineWidth = _outlineConfig.OutlineWidth;
+    if (_outlineConfig == null)
+    {
+      _configNeedLoad = true;
+    }
+    else
+    {
+      if (_configNeedLoad)
+      {
+        outlineColor = _outlineConfig.OutlineColor;
+        outlineMode = _outlineConfig.OutlineMode;
+        outlineWidth = _outlineConfig.OutlineWidth;
+        _configNeedLoad = false;
+      }
+    }
+
   }
   void Awake()
   {
-    Init();
     // Cache renderers
     renderers = GetComponentsInChildren<Renderer>();
 
@@ -122,7 +133,8 @@ public class Outline : MonoBehaviour
   }
 
   void OnValidate() {
-
+    
+    InitConfig();
     // Update material properties
     needsUpdate = true;
 

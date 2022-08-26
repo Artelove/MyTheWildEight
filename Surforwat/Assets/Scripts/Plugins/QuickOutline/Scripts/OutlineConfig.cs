@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "Outline", menuName = "Configs/Outline config", order = 1)]
-public class OutlineConfig :ScriptableObject
+public class OutlineConfig : ScriptableObject
 {
     [SerializeField] private Color _outlineColor;
     [SerializeField] private Outline.Mode _outlineMode;
